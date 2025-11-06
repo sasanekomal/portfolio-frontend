@@ -133,8 +133,8 @@ export const SkillsInfo = [
        "Developed a fully responsive personal portfolio website to showcase my skills, experience, education, and projects. Built using React.Js (Vite), Tailwind CSS, Node.js, and MySQL for dynamic content and smooth performance.Integrated EmailJS for contact form functionality and used animations for an interactive user experience." ,
       image: portfolioLogo,
       tags: ["HTML", "CSS", "JavaScript", "React.js(Vite)", "Tailwind css", "Node.js", "Mysql"],
-      github: "https://github.com/sasanekomal/retail-billing-netlify",
-      webapp: "https://retail-billing.netlify.app/",
+      github: "https://github.com/sasanekomal/portfolio-frontend",
+      webapp: "https://komalsasane-portfolio.netlify.app/",
     },
     {
       id: 1,
