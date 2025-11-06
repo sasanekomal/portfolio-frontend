@@ -7,44 +7,47 @@ const Contact = () => {
   const form = useRef();
   const [isSent, setIsSent] = useState(false);
 
-  const sendEmail = (e) => {
-    e.preventDefault();
+const sendEmail = async (e) => {
+  e.preventDefault();
 
-    emailjs
-      .sendForm(
-        "service_axbtt7a",  // Replace with your EmailJS Service ID
-        "template_1ziboq3",  // Replace with your EmailJS Template ID
-        form.current,
-        "Rz7W9pVF0HdDryNNL"  // Replace with your EmailJS Public Key
-      )
-      .then(
-        () => {
-          setIsSent(true);
-          form.current.reset(); // Reset form fields after sending
-          toast.success("Message sent successfully! ✅", {
-            position: "top-right",
-            autoClose: 3000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            theme: "dark",
-          });
-        },
-        (error) => {
-          console.error("Error sending message:", error);
-          toast.error("Failed to send message. Please try again.", {
-            position: "top-right",
-            autoClose: 3000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            theme: "dark",
-          });
-        }
-      );
-  };
+  try {
+    // 1️⃣ Send Email via EmailJS
+    await emailjs.sendForm(
+      import.meta.env.VITE_EMAILJS_SERVICE_ID,
+      import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
+      form.current,
+      import.meta.env.VITE_EMAILJS_PUBLIC_KEY
+    );
+
+    // 2️⃣ Save to MySQL via backend
+    const formData = new FormData(form.current);
+    const contactData = {
+      name: formData.get("user_name"),
+      email: formData.get("user_email"),
+      subject: formData.get("subject"),
+      message: formData.get("message"),
+    };
+
+    const response = await fetch("https://portfolio-backend-production-c4a0.up.railway.app", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(contactData),
+    });
+
+    if (response.ok) {
+      toast.success("Message sent successfully! ✅");
+      form.current.reset();
+    } else {
+      toast.error("Failed to save message in database ❌");
+    }
+  } catch (error) {
+    console.error("Error:", error);
+    toast.error("Failed to send message ❌");
+  }
+};
+
+
+
 
   return (
     <section
@@ -59,12 +62,11 @@ const Contact = () => {
         <h2 className="text-4xl font-bold text-white">CONTACT</h2>
         <div className="w-32 h-1 bg-purple-500 mx-auto mt-4"></div>
         <p className="text-gray-400 mt-4 text-lg font-semibold">
-          I’d love to hear from you—reach out for any opportunities or questions!
+          Open to exciting opportunities—let’s connect!
         </p>
       </div>
-
       {/* Contact Form */}
-      <div className="mt-8 w-full max-w-md bg-[#0d081f] p-6 rounded-lg shadow-lg border border-gray-700">
+      <div className="mt-2 w-full max-w-md bg-[#0d081f] p-6 rounded-lg shadow-lg border border-gray-700">
         <h3 className="text-xl font-semibold text-white text-center">
           Connect With Me <span className="ml-1">🚀</span>
         </h3>
@@ -110,6 +112,6 @@ const Contact = () => {
       </div>
     </section>
   );
-};
 
+};
 export default Contact;
