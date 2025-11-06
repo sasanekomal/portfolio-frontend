@@ -28,7 +28,7 @@ const sendEmail = async (e) => {
       message: formData.get("message"),
     };
 
-    const response = await fetch("https://portfolio-backend-production-c4a0.up.railway.app", {
+    const response = await fetch("https://portfolio-backend-production-c4a0.up.railway.app/api/contacts", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(contactData),
